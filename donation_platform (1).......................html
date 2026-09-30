@@ -1,0 +1,1632 @@
+<!DOCTYPE html>
+<html lang="ar">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Donation Station</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #10b981;
+            --primary-dark: #059669;
+            --secondary: #f3f4f6;
+            --text: #1f2937;
+            --text-light: #6b7280;
+            --border: #e5e7eb;
+            --success: #22c55e;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --info: #0ea5e9;
+        }
+
+        html {
+            direction: ltr;
+            scroll-behavior: smooth;
+        }
+
+        html[data-lang="ar"] {
+            direction: rtl;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        @keyframes slideInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes heartbeat {
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.1);
+            }
+        }
+
+        @keyframes progressBar {
+            0% {
+                width: 0;
+            }
+
+            100% {
+                width: var(--progress-value);
+            }
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+            animation: slideInDown 0.5s ease;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .logo-icon {
+            font-size: 2rem;
+            animation: heartbeat 2s ease infinite;
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            padding: 0.6rem 1.2rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn:hover,
+        .nav-btn.active {
+            background: white;
+            color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .lang-toggle {
+            padding: 0.6rem 1.2rem;
+            border: 2px solid white;
+            border-radius: 6px;
+            background: transparent;
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .lang-toggle:hover {
+            background: white;
+            color: var(--primary);
+        }
+
+        .hero {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 3rem 0;
+            text-align: center;
+            margin: 2rem 0;
+            border-radius: 12px;
+            animation: fadeIn 0.8s ease;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .hero p {
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+            opacity: 0.95;
+        }
+
+        .btn {
+            padding: 0.8rem 1.6rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: white;
+            color: var(--primary);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #16a34a;
+            transform: translateY(-2px);
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #dc2626;
+            transform: translateY(-2px);
+        }
+
+        .btn-info {
+            background: var(--info);
+            color: white;
+        }
+
+        .btn-info:hover {
+            background: #0284c7;
+            transform: translateY(-2px);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 2rem 0;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            animation: slideInUp 0.6s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            color: var(--primary);
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .page {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        .form-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            margin: 1rem 0;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            animation: slideInUp 0.6s ease;
+        }
+
+        .form-section h3 {
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+            color: var(--text);
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid var(--border);
+            border-radius: 6px;
+            font-size: 1rem;
+            font-family: inherit;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 1.5rem;
+        }
+
+        .cases-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 20px;
+            margin: 2rem 0;
+        }
+
+        .case-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            animation: slideInUp 0.6s ease;
+        }
+
+        .case-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+        }
+
+        .case-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .case-icon {
+            font-size: 2.5rem;
+        }
+
+        .case-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .case-body {
+            padding: 1.5rem;
+        }
+
+        .case-desc {
+            color: var(--text-light);
+            margin-bottom: 1rem;
+            font-size: 0.95rem;
+        }
+
+        .case-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            color: var(--text-light);
+            margin-bottom: 1rem;
+        }
+
+        .progress-bar {
+            background: var(--border);
+            height: 8px;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 0.5rem;
+        }
+
+        .progress-fill {
+            background: var(--primary);
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.5s ease;
+            animation: progressBar 0.8s ease forwards;
+        }
+
+        .progress-text {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+            color: var(--text);
+            margin-bottom: 1rem;
+        }
+
+        .case-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .case-actions .btn {
+            flex: 1;
+            min-width: 80px;
+            padding: 0.6rem 0.8rem;
+            font-size: 0.9rem;
+        }
+
+        .donations-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            margin: 1.5rem 0;
+        }
+
+        .donations-table th {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 1rem;
+            text-align: right;
+            font-weight: bold;
+        }
+
+        .donations-table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .donations-table tbody tr:hover {
+            background: var(--secondary);
+        }
+
+        .donations-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: scaleIn 0.3s ease;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 1rem;
+        }
+
+        .modal-header h2 {
+            color: var(--primary);
+            margin: 0;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-light);
+            transition: color 0.3s ease;
+        }
+
+        .close-btn:hover {
+            color: var(--primary);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: var(--text-light);
+            animation: fadeIn 0.5s ease;
+        }
+
+        .empty-state-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        footer {
+            background: #1f2937;
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 3rem;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+
+            .logo {
+                font-size: 1.1rem;
+            }
+
+            .cases-list {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .badge-success {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .badge-primary {
+            background: #dbeafe;
+            color: #0c4a6e;
+        }
+
+        /* AUTH */
+        .auth-page {
+            min-height: 80vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem 0;
+        }
+
+        .auth-card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(16, 185, 129, 0.15);
+            padding: 2.5rem;
+            width: 100%;
+            max-width: 460px;
+            animation: scaleIn 0.4s ease;
+        }
+
+        .auth-logo {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .auth-logo .logo-icon {
+            font-size: 3rem;
+            display: block;
+            margin-bottom: 0.4rem;
+        }
+
+        .auth-logo h2 {
+            color: var(--primary);
+            font-size: 1.6rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .auth-logo p {
+            color: var(--text-light);
+            font-size: 0.95rem;
+        }
+
+        .auth-switch {
+            text-align: center;
+            margin-top: 1.5rem;
+            color: var(--text-light);
+            font-size: 0.95rem;
+        }
+
+        .auth-switch a {
+            color: var(--primary);
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .btn-auth {
+            width: 100%;
+            padding: 0.9rem;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 0.5rem;
+        }
+
+        .btn-auth:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(16, 185, 129, 0.35);
+        }
+
+        .btn-auth:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .input-icon-wrap {
+            position: relative;
+        }
+
+        .input-icon-wrap .input-icon {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            left: 12px;
+            font-size: 1rem;
+            pointer-events: none;
+        }
+
+        html[data-lang="ar"] .input-icon-wrap .input-icon {
+            left: auto;
+            right: 12px;
+        }
+
+        .input-icon-wrap input {
+            padding-left: 2.4rem !important;
+        }
+
+        html[data-lang="ar"] .input-icon-wrap input {
+            padding-left: 0.8rem !important;
+            padding-right: 2.4rem !important;
+        }
+
+        .password-toggle {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            right: 12px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            color: var(--text-light);
+        }
+
+        html[data-lang="ar"] .password-toggle {
+            right: auto;
+            left: 12px;
+        }
+
+        .auth-alert {
+            padding: 0.8rem 1rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        .auth-alert.error {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fca5a5;
+            display: block;
+        }
+
+        .auth-alert.success {
+            background: #dcfce7;
+            color: #166534;
+            border: 1px solid #86efac;
+            display: block;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-avatar {
+            background: rgba(255, 255, 255, 0.25);
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.9rem;
+            color: white;
+        }
+
+        .user-name-display {
+            color: white;
+            font-weight: bold;
+            font-size: 0.95rem;
+        }
+
+        .btn-logout {
+            padding: 0.5rem 1rem;
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            color: white;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .btn-logout:hover {
+            background: white;
+            color: var(--danger);
+        }
+
+        .form-check {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 0.5rem 0;
+            cursor: pointer;
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        .form-check input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            accent-color: var(--primary);
+            cursor: pointer;
+        }
+
+        /* LOADING OVERLAY */
+        .loading-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(255, 255, 255, 0.8);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .loading-overlay.hidden {
+            display: none;
+        }
+
+        .spinner {
+            width: 48px;
+            height: 48px;
+            border: 5px solid var(--border);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        .loading-overlay p {
+            color: var(--primary);
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="spinner"></div>
+        <p id="loadingText">جاري تحميل البيانات...</p>
+    </div>
+
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <div class="logo-icon">💚</div>
+                    <span>Donation Station</span>
+                </div>
+                <nav class="nav-tabs">
+                    <button class="nav-btn active" data-page="home" data-ar="الرئيسية" data-en="Home">الرئيسية</button>
+                    <button class="nav-btn" data-page="cases" data-ar="الحالات" data-en="Cases">الحالات</button>
+                    <button class="nav-btn" data-page="reports" data-ar="التقارير" data-en="Reports">التقارير</button>
+                </nav>
+                <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+                    <button class="lang-toggle" id="langToggle">🌐 EN</button>
+                    <div id="guestButtons" style="display:flex;gap:8px;">
+                        <button class="nav-btn" data-page="login" data-ar="تسجيل الدخول" data-en="Login">تسجيل
+                            الدخول</button>
+                        <button class="nav-btn" data-page="register" data-ar="إنشاء حساب" data-en="Register"
+                            style="background:rgba(255,255,255,0.35);">إنشاء حساب</button>
+                    </div>
+                    <div id="userMenuArea" class="user-menu" style="display:none;">
+                        <div class="user-avatar" id="userAvatar">U</div>
+                        <span class="user-name-display" id="userNameDisplay"></span>
+                        <button class="btn-logout" onclick="handleLogout()" data-ar="خروج"
+                            data-en="Logout">خروج</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="page active" id="home">
+            <div class="hero">
+                <h1 data-ar="منصة التبرعات الآمنة والموثوقة" data-en="Safe & Reliable Donation Platform">منصة التبرعات
+                    الآمنة والموثوقة</h1>
+                <p data-ar="ربط المتبرعين بالحالات المحتاجة برؤية شفافة وأمان"
+                    data-en="Connect donors with those in need with transparency and security">ربط المتبرعين بالحالات
+                    المحتاجة برؤية شفافة وأمان</p>
+                <button class="btn btn-primary" onclick="switchPage('cases')" data-ar="ابدأ التبرع"
+                    data-en="Start Donating">ابدأ التبرع</button>
+            </div>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number" id="totalDonors">0</div>
+                    <div class="stat-label" data-ar="إجمالي المتبرعين" data-en="Total Donors">إجمالي المتبرعين</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="totalAmount">0</div>
+                    <div class="stat-label" data-ar="إجمالي التبرعات" data-en="Total Donations">إجمالي التبرعات</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="activeCases">0</div>
+                    <div class="stat-label" data-ar="الحالات النشطة" data-en="Active Cases">الحالات النشطة</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="completedCases">0</div>
+                    <div class="stat-label" data-ar="الحالات المكتملة" data-en="Completed Cases">الحالات المكتملة</div>
+                </div>
+            </div>
+            <div class="form-section">
+                <h3 data-ar="آخر التبرعات" data-en="Latest Donations">آخر التبرعات</h3>
+                <div id="latestDonations"></div>
+            </div>
+        </div>
+
+        <div class="page" id="cases">
+            <div
+                style="display:flex;justify-content:space-between;align-items:center;margin:1.5rem 0;flex-wrap:wrap;gap:1rem;">
+                <h2 data-ar="إدارة الحالات" data-en="Manage Cases">إدارة الحالات</h2>
+                <button class="btn btn-primary" onclick="openAddCaseModal()" data-ar="➕ إضافة حالة جديدة"
+                    data-en="➕ Add New Case">➕ إضافة حالة جديدة</button>
+            </div>
+            <div id="casesList" class="cases-list"></div>
+            <div id="emptyCases" class="empty-state hidden">
+                <div class="empty-state-icon">📭</div>
+                <p data-ar="لا توجد حالات حالياً" data-en="No cases found">لا توجد حالات حالياً</p>
+            </div>
+        </div>
+
+        <div class="page" id="reports">
+            <h2 data-ar="التقارير والإحصائيات" data-en="Reports & Statistics">التقارير والإحصائيات</h2>
+            <div class="form-section">
+                <h3 data-ar="ملخص التبرعات" data-en="Donations Summary">ملخص التبرعات</h3>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number" id="reportTotalAmount">0</div>
+                        <div class="stat-label" data-ar="إجمالي المبلغ" data-en="Total Amount">إجمالي المبلغ</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="reportDonationCount">0</div>
+                        <div class="stat-label" data-ar="عدد التبرعات" data-en="Donation Count">عدد التبرعات</div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-section">
+                <h3 data-ar="تقرير الحالات" data-en="Cases Report">تقرير الحالات</h3>
+                <div id="casesReport"></div>
+            </div>
+            <div class="form-section">
+                <h3 data-ar="سجل التبرعات" data-en="Donations Record">سجل التبرعات</h3>
+                <table class="donations-table">
+                    <thead>
+                        <tr>
+                            <th data-ar="المتبرع" data-en="Donor">المتبرع</th>
+                            <th data-ar="الحالة" data-en="Case">الحالة</th>
+                            <th data-ar="المبلغ" data-en="Amount">المبلغ</th>
+                            <th data-ar="التاريخ" data-en="Date">التاريخ</th>
+                            <th data-ar="الحالة" data-en="Status">الحالة</th>
+                        </tr>
+                    </thead>
+                    <tbody id="donationsTable"></tbody>
+                </table>
+                <div id="emptyDonations" class="text-center empty-state hidden">
+                    <p data-ar="لا توجد تبرعات حتى الآن" data-en="No donations yet">لا توجد تبرعات حتى الآن</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="page" id="login">
+            <div class="auth-page">
+                <div class="auth-card">
+                    <div class="auth-logo">
+                        <span class="logo-icon">💚</span>
+                        <h2 data-ar="مرحباً بعودتك" data-en="Welcome Back">مرحباً بعودتك</h2>
+                        <p data-ar="سجّل دخولك للمتابعة" data-en="Sign in to continue">سجّل دخولك للمتابعة</p>
+                    </div>
+                    <div class="auth-alert" id="loginAlert"></div>
+                    <div class="form-group">
+                        <label data-ar="البريد الإلكتروني" data-en="Email">البريد الإلكتروني</label>
+                        <div class="input-icon-wrap"><span class="input-icon"></span><input type="email" id="loginEmail"
+                                placeholder=""></div>
+                    </div>
+                    <div class="form-group">
+                        <label data-ar="كلمة المرور" data-en="Password">كلمة المرور</label>
+                        <div class="input-icon-wrap"><span class="input-icon">🔒</span><input type="password"
+                                id="loginPassword" placeholder="••••••••"><button type="button" class="password-toggle"
+                                onclick="togglePwd('loginPassword',this)">👁️</button></div>
+                    </div>
+                    <button class="btn-auth" onclick="handleLogin()" data-ar="تسجيل الدخول" data-en="Sign In">تسجيل
+                        الدخول</button>
+                    <div class="auth-switch">
+                        <span data-ar="ليس لديك حساب؟" data-en="No account?">ليس لديك حساب؟</span>
+                        <a class="nav-btn" data-page="register"
+                            style="background:none;color:var(--primary);padding:0;font-weight:bold;"
+                            data-ar=" إنشاء حساب" data-en=" Register"> إنشاء حساب</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="page" id="register">
+            <div class="auth-page">
+                <div class="auth-card">
+                    <div class="auth-logo">
+                        <span class="logo-icon">💚</span>
+                        <h2 data-ar="إنشاء حساب جديد" data-en="Create Account">إنشاء حساب جديد</h2>
+                        <p data-ar="انضم إلينا وابدأ رحلة العطاء" data-en="Join us and start giving">انضم إلينا وابدأ
+                            رحلة العطاء</p>
+                    </div>
+                    <div class="auth-alert" id="registerAlert"></div>
+                    <div class="form-grid">
+                        <div class="form-group"><label data-ar="الاسم الأول" data-en="First Name">الاسم الأول</label>
+                            <div class="input-icon-wrap"><span class="input-icon"></span><input type="text"
+                                    id="regFirstName" placeholder=""></div>
+                        </div>
+                        <div class="form-group"><label data-ar="اسم العائلة" data-en="Last Name">اسم العائلة</label>
+                            <div class="input-icon-wrap"><span class="input-icon"></span><input type="text"
+                                    id="regLastName" placeholder=""></div>
+                        </div>
+                    </div>
+                    <div class="form-group"><label data-ar="البريد الإلكتروني" data-en="Email">البريد الإلكتروني</label>
+                        <div class="input-icon-wrap"><span class="input-icon"></span><input type="email" id="regEmail"
+                                placeholder=""></div>
+                    </div>
+                    <div class="form-group"><label data-ar="رقم الهاتف" data-en="Phone">رقم الهاتف</label>
+                        <div class="input-icon-wrap"><span class="input-icon"></span><input type="tel" id="regPhone"
+                                placeholder=""></div>
+                    </div>
+                    <div class="form-group"><label data-ar="كلمة المرور" data-en="Password">كلمة المرور</label>
+                        <div class="input-icon-wrap"><span class="input-icon">🔒</span><input type="password"
+                                id="regPassword" placeholder="••••••••"><button type="button" class="password-toggle"
+                                onclick="togglePwd('regPassword',this)">👁️</button></div>
+                    </div>
+                    <div class="form-group"><label data-ar="تأكيد كلمة المرور" data-en="Confirm Password">تأكيد كلمة
+                            المرور</label>
+                        <div class="input-icon-wrap"><span class="input-icon">🔒</span><input type="password"
+                                id="regConfirmPassword" placeholder="••••••••"><button type="button"
+                                class="password-toggle" onclick="togglePwd('regConfirmPassword',this)">👁️</button>
+                        </div>
+                    </div>
+                    <label class="form-check" style="margin-bottom:1rem;"><input type="checkbox" id="agreeTerms"><span
+                            data-ar="أوافق على الشروط والأحكام" data-en="I agree to Terms & Conditions">أوافق على الشروط
+                            والأحكام</span></label>
+                    <button class="btn-auth" onclick="handleRegister()" data-ar="إنشاء الحساب"
+                        data-en="Create Account">إنشاء الحساب</button>
+                    <div class="auth-switch">
+                        <span data-ar="لديك حساب بالفعل؟" data-en="Have an account?">لديك حساب بالفعل؟</span>
+                        <a class="nav-btn" data-page="login"
+                            style="background:none;color:var(--primary);padding:0;font-weight:bold;"
+                            data-ar=" تسجيل الدخول" data-en=" Sign in"> تسجيل الدخول</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="addCaseModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 data-ar="إضافة حالة جديدة" data-en="Add New Case">إضافة حالة جديدة</h2><button class="close-btn"
+                    onclick="closeAddCaseModal()">✕</button>
+            </div>
+            <form id="addCaseForm" onsubmit="handleAddCase(event)">
+                <div class="form-group"><label data-ar="عنوان الحالة" data-en="Title">عنوان الحالة</label><input
+                        type="text" id="caseTitle" required></div>
+                <div class="form-group"><label data-ar="الوصف" data-en="Description">الوصف</label><textarea
+                        id="caseDesc" required></textarea></div>
+                <div class="form-grid">
+                    <div class="form-group"><label data-ar="المبلغ المطلوب (ج.م)" data-en="Amount (EGP)">المبلغ
+                            المطلوب</label><input type="number" id="caseAmount" min="100" step="100" required></div>
+                    <div class="form-group"><label data-ar="الفئة" data-en="Category">الفئة</label>
+                        <select id="caseCategory" required>
+                            <option value="food" data-ar="غذاء" data-en="Food">غذاء</option>
+                            <option value="education" data-ar="تعليم" data-en="Education">تعليم</option>
+                            <option value="health" data-ar="صحة" data-en="Health">صحة</option>
+                            <option value="housing" data-ar="سكن" data-en="Housing">سكن</option>
+                            <option value="other" data-ar="أخرى" data-en="Other">أخرى</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group"><label data-ar="الموقع" data-en="Location">الموقع</label><input type="text"
+                        id="caseLocation" required></div>
+                <div class="form-group"><label data-ar="الرمز التعبيري" data-en="Emoji">الرمز</label><input type="text"
+                        id="caseEmoji" value="❤️" maxlength="2"></div>
+                <div class="button-group">
+                    <button type="submit" class="btn btn-primary" data-ar="حفظ الحالة" data-en="Save">حفظ
+                        الحالة</button>
+                    <button type="button" class="btn" style="background:#e5e7eb;" onclick="closeAddCaseModal()"
+                        data-ar="إلغاء" data-en="Cancel">إلغاء</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal" id="donateModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="donateTitle" data-ar="تبرع الآن" data-en="Donate Now">تبرع الآن</h2><button class="close-btn"
+                    onclick="closeDonateModal()">✕</button>
+            </div>
+            <form id="donateForm" onsubmit="handleDonate(event)">
+                <div class="form-group"><label data-ar="اسمك" data-en="Your Name">اسمك</label><input type="text"
+                        id="donorName" required></div>
+                <div class="form-group"><label data-ar="البريد الإلكتروني" data-en="Email">البريد
+                        الإلكتروني</label><input type="email" id="donorEmail" required></div>
+                <div class="form-group"><label data-ar="رقم الهاتف" data-en="Phone">رقم الهاتف</label><input type="tel"
+                        id="donorPhone" required></div>
+                <div class="form-group"><label data-ar="مبلغ التبرع (ج.م)" data-en="Amount (EGP)">مبلغ
+                        التبرع</label><input type="number" id="donationAmount" min="1" step="1" required></div>
+                <div class="form-group"><label data-ar="طريقة الدفع" data-en="Payment Method">طريقة الدفع</label>
+                    <select id="paymentMethod" required>
+                        <option value="card" data-ar="بطاقة ائتمان" data-en="Credit Card">بطاقة ائتمان</option>
+                        <option value="bank" data-ar="تحويل بنكي" data-en="Bank Transfer">تحويل بنكي</option>
+                        <option value="wallet" data-ar="محفظة رقمية" data-en="Digital Wallet">محفظة رقمية</option>
+                        <option value="mobile" data-ar="تحويل موبايل" data-en="Mobile Transfer">تحويل موبايل</option>
+                    </select>
+                </div>
+                <div class="form-group"><label data-ar="رسالة (اختياري)"
+                        data-en="Message (Optional)">رسالة</label><textarea id="donationMessage"></textarea></div>
+                <div class="button-group">
+                    <button type="submit" class="btn btn-primary" data-ar="تأكيد التبرع" data-en="Confirm">تأكيد
+                        التبرع</button>
+                    <button type="button" class="btn" style="background:#e5e7eb;" onclick="closeDonateModal()"
+                        data-ar="إلغاء" data-en="Cancel">إلغاء</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <footer>
+        <p><strong data-ar="💚 منصة التبرعات الآمنة والموثوقة" data-en="💚 Safe & Reliable Donation Platform">💚 منصة
+                التبرعات الآمنة والموثوقة</strong></p>
+        <p data-ar="ربط المتبرعين بالحالات المحتاجة برؤية شفافة وأمان" data-en="Connecting donors with those in need">
+            ربط المتبرعين بالحالات المحتاجة برؤية شفافة وأمان</p>
+    </footer>
+
+    <script>
+        // ============================================================
+        //  مصفوفة الحالات الثابتة (Static Cases)
+        // ============================================================
+        const STATIC_CASES = [
+            {
+                id: "static_case_1",
+                title: 'عائلة سيدة مسنة تحتاج مساعدة',
+                desc: 'امرأة عمرها 75 سنة تعيش بمفردها وتحتاج للطعام والعلاج والدواء بشكل شهري منتظم.',
+                amount: 6000, collected: 2500, status: 'active',
+                emoji: '👵', category: 'food', location: 'القاهرة',
+                createdAt: "2026-06-01T10:00:00.000Z"
+            },
+            {
+                id: "static_case_2",
+                title: 'تجهيز حقائب مدرسية للأيتام',
+                desc: 'نستهدف توفير حقائب وأدوات ومستلزمات مدرسية كاملة لـ 50 طفلاً يتيماً قبل بداية العام الدراسي الجديد.',
+                amount: 15000, collected: 4500, status: 'active',
+                emoji: '🎒', category: 'education', location: 'الإسكندرية',
+                createdAt: "2026-06-02T11:00:00.000Z"
+            },
+            {
+                id: "static_case_3",
+                title: 'ترميم سقف منزل متهالك',
+                desc: 'أسرة تتكون من 6 أفراد تعيش في منزل ذو سقف خشبي متهالك يحتاج للترميم العاجل والبناء لحمايتهم من مياه الأمطار.',
+                amount: 30000, collected: 12000, status: 'active',
+                emoji: '🏠', category: 'housing', location: 'أسيوط',
+                createdAt: "2026-06-03T12:00:00.000Z"
+            },
+            {
+                id: "static_case_4",
+                title: 'عملية جراحية دقيقة لزراعة قوقعة',
+                desc: 'طفل يبلغ من العمر 4 سنوات يعاني من فقدان سمع تام ويحتاج إلى عملية زراعة قوقعة بشكل عاجل لاستعادة حاسة السمع.',
+                amount: 80000, collected: 35000, status: 'active',
+                emoji: '🩺', category: 'health', location: 'المنصورة',
+                createdAt: "2026-06-04T13:00:00.000Z"
+            },
+            {
+                id: "static_case_5",
+                title: 'توفير كراسي متحركة لذوي الهمم',
+                desc: 'حملة لتوزيع كراسي متحركة كهربائية وعادية لمساعدة مجموعة من الطلاب ذوي الهمم على الانتقال لجامعاتهم ومدارسهم.',
+                amount: 20000, collected: 20000, status: 'completed',
+                emoji: '🦽', category: 'health', location: 'طنطا',
+                createdAt: "2026-06-05T14:00:00.000Z"
+            }
+        ];
+
+        const JSONBIN_KEY = '$2a$10$placeholder_will_be_replaced';
+        let cases = [];
+        let donations = [];
+        let users = [];
+        let BIN_ID = localStorage.getItem('ds_bin_id') || null;
+        let currentUser = JSON.parse(localStorage.getItem('ds_current_user') || 'null');
+        let selectedCaseId = null;
+        let currentLang = localStorage.getItem('lang') || 'ar';
+        let syncInterval = null;
+
+        const API = 'https://api.jsonbin.io/v3';
+
+        async function createBin(data) {
+            const res = await fetch(`${API}/b`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'X-Bin-Name': 'donation-station', 'X-Bin-Private': 'false' },
+                body: JSON.stringify(data)
+            });
+            const json = await res.json();
+            return json.metadata?.id || null;
+        }
+
+        async function readBin() {
+            if (!BIN_ID) return null;
+            const res = await fetch(`${API}/b/${BIN_ID}/latest`);
+            if (!res.ok) return null;
+            const json = await res.json();
+            return json.record;
+        }
+
+        async function updateBin(data) {
+            if (!BIN_ID) return;
+            await fetch(`${API}/b/${BIN_ID}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+        }
+
+        function getLocalData() {
+            return {
+                cases: JSON.parse(localStorage.getItem('ds_cases') || '[]'),
+                donations: JSON.parse(localStorage.getItem('ds_donations') || '[]'),
+                users: JSON.parse(localStorage.getItem('ds_users') || '[]')
+            };
+        }
+
+        function saveLocal() {
+            localStorage.setItem('ds_cases', JSON.stringify(cases));
+            localStorage.setItem('ds_donations', JSON.stringify(donations));
+            localStorage.setItem('ds_users', JSON.stringify(users));
+        }
+
+        async function syncToCloud() {
+            saveLocal();
+            try { await updateBin({ cases, donations, users }); } catch (e) { }
+        }
+
+        async function loadData() {
+            showLoading(true);
+            try {
+                if (BIN_ID) {
+                    const data = await readBin();
+                    if (data) {
+                        cases = data.cases || [];
+                        donations = data.donations || [];
+                        users = data.users || [];
+
+                        // دمج الحالات الـ Static التي ليست موجودة مسبقاً في السحابة
+                        STATIC_CASES.forEach(sc => {
+                            if (!cases.some(c => c.id === sc.id)) {
+                                cases.push(sc);
+                            }
+                        });
+
+                        saveLocal();
+                        showLoading(false);
+                        renderAll();
+                        startAutoSync();
+                        return;
+                    }
+                }
+
+                const local = getLocalData();
+                cases = local.cases;
+                donations = local.donations;
+                users = local.users;
+
+                // دمج الحالات الـ Static إذا لم تكن موجودة محلياً
+                STATIC_CASES.forEach(sc => {
+                    if (!cases.some(c => c.id === sc.id)) {
+                        cases.push(sc);
+                    }
+                });
+
+                const newId = await createBin({ cases, donations, users });
+                if (newId) {
+                    BIN_ID = newId;
+                    localStorage.setItem('ds_bin_id', BIN_ID);
+                }
+                saveLocal();
+                startAutoSync();
+            } catch (e) {
+                const local = getLocalData();
+                cases = local.cases;
+                donations = local.donations;
+                users = local.users;
+
+                STATIC_CASES.forEach(sc => {
+                    if (!cases.some(c => c.id === sc.id)) {
+                        cases.push(sc);
+                    }
+                });
+                saveLocal();
+            }
+            showLoading(false);
+            renderAll();
+        }
+
+        function startAutoSync() {
+            if (syncInterval) clearInterval(syncInterval);
+            syncInterval = setInterval(async () => {
+                try {
+                    const data = await readBin();
+                    if (data) {
+                        let incomingCases = data.cases || [];
+                        donations = data.donations || [];
+                        users = data.users || [];
+
+                        STATIC_CASES.forEach(sc => {
+                            if (!incomingCases.some(c => c.id === sc.id)) {
+                                incomingCases.push(sc);
+                            }
+                        });
+                        cases = incomingCases;
+
+                        saveLocal();
+                        renderAll();
+                    }
+                } catch (e) { }
+            }, 5000);
+        }
+
+        function showLoading(show, text) {
+            const overlay = document.getElementById('loadingOverlay');
+            if (text) document.getElementById('loadingText').textContent = text;
+            overlay.classList.toggle('hidden', !show);
+        }
+
+        // ============================================================
+        //  RENDERING
+        // ============================================================
+        const translations = {
+            ar: { food: 'غذاء', education: 'تعليم', health: 'صحة', housing: 'سكن', other: 'أخرى', active: 'نشطة', completed: 'مكتملة' },
+            en: { food: 'Food', education: 'Education', health: 'Health', housing: 'Housing', other: 'Other', active: 'Active', completed: 'Completed' }
+        };
+
+        function renderAll() {
+            renderCases();
+            updateStats();
+            if (document.getElementById('reports').classList.contains('active')) updateReports();
+        }
+
+        function renderCases() {
+            const list = document.getElementById('casesList');
+            const empty = document.getElementById('emptyCases');
+            if (!cases.length) { list.innerHTML = ''; empty.classList.remove('hidden'); return; }
+            empty.classList.add('hidden');
+            const t = translations[currentLang];
+            list.innerHTML = cases.map(c => {
+                const progress = Math.min((c.collected / c.amount) * 100, 100);
+                const cat = t[c.category] || c.category;
+                const status = c.status === 'active' ? t.active : t.completed;
+                return `<div class="case-card">
+            <div class="case-header"><div class="case-icon">${c.emoji}</div><div><div class="case-title">${c.title}</div><span class="badge badge-primary">${cat}</span></div></div>
+            <div class="case-body">
+                <p class="case-desc">${c.desc}</p>
+                <div class="case-meta"><span>📍 ${c.location}</span><span class="badge ${c.status === 'active' ? 'badge-primary' : 'badge-success'}">${status}</span></div>
+                <div class="progress-bar"><div class="progress-fill" style="--progress-value:${progress}%;width:${progress}%"></div></div>
+                <div class="progress-text"><span>${c.collected.toLocaleString()} / ${c.amount.toLocaleString()} ${currentLang === 'ar' ? 'ج.م' : 'EGP'}</span><span>${Math.round(progress)}%</span></div>
+                <div class="case-actions">
+                    ${c.status === 'active' ? `<button class="btn btn-success" onclick="openDonateModal('${c.id}')">${currentLang === 'ar' ? '❤️ تبرع الآن' : '❤️ Donate'}</button>` : ''}
+                    ${c.status === 'active' ? `<button class="btn btn-info" onclick="completeCase('${c.id}')">${currentLang === 'ar' ? '✓ أكمل' : '✓ Complete'}</button>` : ''}
+                    <button class="btn btn-danger" onclick="deleteCase('${c.id}')">${currentLang === 'ar' ? '🗑️ حذف' : '🗑️ Delete'}</button>
+                </div>
+            </div>
+        </div>`;
+            }).join('');
+        }
+
+        function updateStats() {
+            const totalDonors = new Set(donations.map(d => d.donor)).size;
+            const totalAmount = donations.reduce((s, d) => s + d.amount, 0);
+            document.getElementById('totalDonors').textContent = totalDonors;
+            document.getElementById('totalAmount').textContent = totalAmount.toLocaleString();
+            document.getElementById('activeCases').textContent = cases.filter(c => c.status === 'active').length;
+            document.getElementById('completedCases').textContent = cases.filter(c => c.status === 'completed').length;
+            renderLatestDonations();
+        }
+
+        function renderLatestDonations() {
+            const container = document.getElementById('latestDonations');
+            if (!donations.length) { container.innerHTML = `<p style="color:var(--text-light);text-align:center">${currentLang === 'ar' ? 'لا توجد تبرعات حتى الآن' : 'No donations yet'}</p>`; return; }
+            container.innerHTML = [...donations].reverse().slice(0, 5).map(d => {
+                const c = cases.find(x => x.id === d.caseId);
+                const date = new Date(d.date).toLocaleDateString(currentLang === 'ar' ? 'ar-EG' : 'en-US');
+                return `<div style="padding:12px;background:var(--secondary);border-radius:8px;margin-bottom:8px;border-right:4px solid var(--primary);">
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+                <div><p style="font-weight:bold;margin:0 0 4px">${c?.title || '—'}</p><p style="margin:0;color:var(--text-light);font-size:0.85rem">${currentLang === 'ar' ? 'من' : 'From'} ${d.donor} • ${date}</p></div>
+                <p style="font-weight:bold;color:var(--primary);margin:0">${d.amount.toLocaleString()} ${currentLang === 'ar' ? 'ج.م' : 'EGP'}</p>
+            </div>
+        </div>`;
+            }).join('');
+        }
+
+        function updateReports() {
+            const t = translations[currentLang];
+            document.getElementById('reportTotalAmount').textContent = donations.reduce((s, d) => s + d.amount, 0).toLocaleString();
+            document.getElementById('reportDonationCount').textContent = donations.length;
+            const cr = document.getElementById('casesReport');
+            cr.innerHTML = cases.map(c => {
+                const p = Math.min((c.collected / c.amount) * 100, 100);
+                return `<div style="padding:12px;background:var(--secondary);border-radius:8px;margin-bottom:8px;">
+            <div style="display:flex;justify-content:space-between;margin-bottom:8px;"><span style="font-weight:bold">${c.emoji} ${c.title}</span><span class="badge ${c.status === 'active' ? 'badge-primary' : 'badge-success'}">${c.status === 'active' ? t.active : t.completed}</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:0.9rem;color:var(--text-light);margin-bottom:8px;"><span>${t[c.category] || c.category}</span><span>${c.collected.toLocaleString()} / ${c.amount.toLocaleString()}</span></div>
+            <div class="progress-bar"><div class="progress-fill" style="--progress-value:${p}%;width:${p}%"></div></div>
+        </div>`;
+            }).join('') || `<p style="color:var(--text-light)">${currentLang === 'ar' ? 'لا توجد حالات' : 'No cases'}</p>`;
+            const tb = document.getElementById('donationsTable');
+            const ed = document.getElementById('emptyDonations');
+            if (!donations.length) { tb.innerHTML = ''; ed.classList.remove('hidden'); return; }
+            ed.classList.add('hidden');
+            tb.innerHTML = donations.map(d => {
+                const c = cases.find(x => x.id === d.caseId);
+                const date = new Date(d.date).toLocaleDateString(currentLang === 'ar' ? 'ar-EG' : 'en-US');
+                return `<tr><td>${d.donor}</td><td>${c?.title || '—'}</td><td style="color:var(--primary);font-weight:bold">${d.amount.toLocaleString()} ${currentLang === 'ar' ? 'ج.م' : 'EGP'}</td><td>${date}</td><td><span class="badge badge-success">${t.completed}</span></td></tr>`;
+            }).join('');
+        }
+
+        // ============================================================
+        //  CASE MANAGEMENT
+        // ============================================================
+        function openAddCaseModal() { document.getElementById('addCaseModal').classList.add('active'); }
+        function closeAddCaseModal() { document.getElementById('addCaseModal').classList.remove('active'); document.getElementById('addCaseForm').reset(); }
+
+        async function handleAddCase(e) {
+            e.preventDefault();
+            showLoading(true, currentLang === 'ar' ? 'جاري الحفظ...' : 'Saving...');
+            cases.push({
+                id: Date.now().toString(),
+                title: document.getElementById('caseTitle').value,
+                desc: document.getElementById('caseDesc').value,
+                amount: parseFloat(document.getElementById('caseAmount').value),
+                collected: 0, status: 'active',
+                emoji: document.getElementById('caseEmoji').value || '❤️',
+                category: document.getElementById('caseCategory').value,
+                location: document.getElementById('caseLocation').value,
+                createdAt: new Date().toISOString()
+            });
+            await syncToCloud();
+            showLoading(false);
+            renderAll();
+            closeAddCaseModal();
+        }
+
+        async function deleteCase(id) {
+            if (!confirm(currentLang === 'ar' ? 'هل أنت متأكد من الحذف؟' : 'Delete this case?')) return;
+            cases = cases.filter(c => c.id !== id);
+            donations = donations.filter(d => d.caseId !== id);
+            await syncToCloud();
+            renderAll();
+        }
+
+        async function completeCase(id) {
+            const c = cases.find(x => x.id === id);
+            if (c) { c.status = 'completed'; await syncToCloud(); renderAll(); }
+        }
+
+        // ============================================================
+        //  DONATION MANAGEMENT
+        // ============================================================
+        function openDonateModal(caseId) {
+            selectedCaseId = caseId;
+            const c = cases.find(x => x.id === caseId);
+            document.getElementById('donateTitle').textContent = currentLang === 'ar' ? `تبرع ل: ${c.title}` : `Donate to: ${c.title}`;
+            document.getElementById('donationAmount').max = c.amount - c.collected;
+            document.getElementById('donateModal').classList.add('active');
+        }
+        function closeDonateModal() { document.getElementById('donateModal').classList.remove('active'); document.getElementById('donateForm').reset(); selectedCaseId = null; }
+
+        async function handleDonate(e) {
+            e.preventDefault();
+            showLoading(true, currentLang === 'ar' ? 'جاري تسجيل التبرع...' : 'Processing...');
+            const amount = parseFloat(document.getElementById('donationAmount').value);
+            donations.push({
+                id: Date.now().toString(), caseId: selectedCaseId,
+                donor: document.getElementById('donorName').value,
+                email: document.getElementById('donorEmail').value,
+                phone: document.getElementById('donorPhone').value,
+                amount, method: document.getElementById('paymentMethod').value,
+                message: document.getElementById('donationMessage').value,
+                date: new Date().toISOString()
+            });
+            const c = cases.find(x => x.id === selectedCaseId);
+            if (c) { c.collected += amount; if (c.collected >= c.amount) c.status = 'completed'; }
+            await syncToCloud();
+            showLoading(false);
+            renderAll();
+            closeDonateModal();
+            alert(currentLang === 'ar' ? '✅ شكراً على تبرعك!' : '✅ Thank you for your donation!');
+        }
+
+        // ============================================================
+        //  AUTH
+        // ============================================================
+        function updateAuthUI() {
+            const guest = document.getElementById('guestButtons');
+            const menu = document.getElementById('userMenuArea');
+            if (currentUser) {
+                guest.style.display = 'none'; menu.style.display = 'flex';
+                const name = currentUser.firstName + ' ' + currentUser.lastName;
+                document.getElementById('userNameDisplay').textContent = name;
+                document.getElementById('userAvatar').textContent = (currentUser.firstName[0] + currentUser.lastName[0]).toUpperCase();
+            } else { guest.style.display = 'flex'; menu.style.display = 'none'; }
+        }
+
+        function showAuthAlert(id, msg, type) {
+            const el = document.getElementById(id);
+            el.textContent = msg; el.className = 'auth-alert ' + type;
+        }
+
+        function togglePwd(id, btn) {
+            const inp = document.getElementById(id);
+            inp.type = inp.type === 'password' ? 'text' : 'password';
+            btn.textContent = inp.type === 'password' ? '👁️' : '🔒';
+        }
+
+        function handleLogin() {
+            const email = document.getElementById('loginEmail').value.trim();
+            const pass = document.getElementById('loginPassword').value;
+            const isAr = currentLang === 'ar';
+            if (!email || !pass) { showAuthAlert('loginAlert', isAr ? 'يرجى ملء جميع الحقول' : 'Please fill all fields', 'error'); return; }
+            const u = users.find(x => x.email === email && x.password === btoa(pass));
+            if (!u) { showAuthAlert('loginAlert', isAr ? 'بيانات غير صحيحة' : 'Incorrect credentials', 'error'); return; }
+            currentUser = u;
+            localStorage.setItem('ds_current_user', JSON.stringify(u));
+            updateAuthUI();
+            showAuthAlert('loginAlert', isAr ? '✅ تم تسجيل الدخول!' : '✅ Logged in!', 'success');
+            setTimeout(() => switchPage('home'), 800);
+        }
+
+        async function handleRegister() {
+            const firstName = document.getElementById('regFirstName').value.trim();
+            const lastName = document.getElementById('regLastName').value.trim();
+            const email = document.getElementById('regEmail').value.trim();
+            const phone = document.getElementById('regPhone').value.trim();
+            const pass = document.getElementById('regPassword').value;
+            const confirm = document.getElementById('regConfirmPassword').value;
+            const agreed = document.getElementById('agreeTerms').checked;
+            const isAr = currentLang === 'ar';
+
+            if (!firstName || !lastName || !email || !pass || !confirm) { showAuthAlert('registerAlert', isAr ? 'يرجى ملء جميع الحقول' : 'Fill all fields', 'error'); return; }
+            if (pass.length < 6) { showAuthAlert('registerAlert', isAr ? 'كلمة المرور 6 أحرف على الأقل' : 'Password min 6 chars', 'error'); return; }
+            if (pass !== confirm) { showAuthAlert('registerAlert', isAr ? 'كلمتا المرور غير متطابقتين' : 'Passwords do not match', 'error'); return; }
+            if (!agreed) { showAuthAlert('registerAlert', isAr ? 'يجب الموافقة على الشروط' : 'Accept terms first', 'error'); return; }
+            if (users.find(u => u.email === email)) { showAuthAlert('registerAlert', isAr ? 'البريد مستخدم بالفعل' : 'Email already registered', 'error'); return; }
+
+            users.push({ id: Date.now().toString(), firstName, lastName, email, phone, password: btoa(pass), createdAt: new Date().toISOString() });
+            showLoading(true, isAr ? 'جاري إنشاء الحساب...' : 'Creating account...');
+            await syncToCloud();
+            showLoading(false);
+            showAuthAlert('registerAlert', isAr ? '✅ تم إنشاء الحساب! جاري التحويل...' : '✅ Account created!', 'success');
+            setTimeout(() => switchPage('login'), 1000);
+        }
+
+        function handleLogout() {
+            currentUser = null;
+            localStorage.removeItem('ds_current_user');
+            updateAuthUI();
+            switchPage('home');
+        }
+
+        // ============================================================
+        //  NAVIGATION & LANGUAGE
+        // ============================================================
+        function switchPage(page) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(page).classList.add('active');
+            document.querySelectorAll('.nav-btn[data-page]').forEach(b => b.classList.remove('active'));
+            const match = document.querySelector(`.nav-btn[data-page="${page}"]`);
+            if (match) match.classList.add('active');
+            if (page === 'reports') updateReports();
+            ['loginAlert', 'registerAlert'].forEach(id => { const el = document.getElementById(id); if (el) { el.className = 'auth-alert'; el.textContent = ''; } });
+        }
+
+        function setLanguage(lang) {
+            currentLang = lang;
+            localStorage.setItem('lang', lang);
+            document.documentElement.lang = lang;
+            document.documentElement.setAttribute('data-lang', lang);
+            document.getElementById('langToggle').textContent = lang === 'ar' ? '🌐 EN' : '🌐 AR';
+            document.querySelectorAll('[data-ar][data-en]').forEach(el => {
+                const val = lang === 'ar' ? el.getAttribute('data-ar') : el.getAttribute('data-en');
+                if (['INPUT', 'TEXTAREA'].includes(el.tagName)) el.placeholder = val;
+                else el.textContent = val;
+            });
+            document.querySelectorAll('select option[data-ar]').forEach(o => {
+                o.textContent = lang === 'ar' ? o.getAttribute('data-ar') : o.getAttribute('data-en');
+            });
+            renderAll();
+        }
+
+        // ============================================================
+        //  INIT
+        // ============================================================
+        document.addEventListener('DOMContentLoaded', () => {
+            document.addEventListener('click', e => {
+                const btn = e.target.closest('.nav-btn[data-page]');
+                if (btn) switchPage(btn.getAttribute('data-page'));
+            });
+            document.getElementById('langToggle').addEventListener('click', () => {
+                setLanguage(currentLang === 'ar' ? 'en' : 'ar');
+            });
+
+            setLanguage(currentLang);
+            updateAuthUI();
+            loadData();
+        });
+    </script>
+</body>
+
+</html>
